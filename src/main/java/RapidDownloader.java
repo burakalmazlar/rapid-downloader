@@ -10,6 +10,7 @@ import java.net.http.HttpResponse;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -91,7 +92,7 @@ public class RapidDownloader {
 
             Path downloadDir = of(DOWNLOAD_FOLDER);
             HttpResponse<Path> response = HttpClient.newHttpClient().send(
-                    HttpRequest.newBuilder().GET().uri(location.toURI())
+                    HttpRequest.newBuilder().timeout(Duration.ofHours(2)).GET().uri(location.toURI())
                             .headers("Cookie", cookie).build(),
                     HttpResponse.BodyHandlers.ofFileDownload(downloadDir, StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE));
 
