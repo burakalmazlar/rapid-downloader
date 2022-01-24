@@ -30,7 +30,7 @@ public class RapidDownloader {
 
     private int R = 0;
 
-    HttpClient downloadClient = HttpClient.newBuilder().connectTimeout(Duration.ofMinutes(1)).followRedirects(HttpClient.Redirect.ALWAYS).build();
+    HttpClient downloadClient = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(15)).followRedirects(HttpClient.Redirect.ALWAYS).build();
 
     public static void main(String[] args) throws IOException {
 
@@ -74,18 +74,32 @@ public class RapidDownloader {
         }).start();
     }
 
-    private boolean download(String file) {
+    private boolean download(String line) {
         if (R == 1) {
             return false;
         }
         try {
-            System.out.print(file);
+            String[] link = line.split(",");
+            String name = link[0];
+            String file = link[1];
+
+            System.out.print(name + "("+ file +")");
+
+            if(Files.exists(Path.of(DOWNLOAD_FOLDER,name))) {
+                System.out.println(" exists.");
+                return false;
+            }
+
             String cookie = getCookie();
 
             URL url = new URL(file);
 
             HttpRequest request3 = HttpRequest.newBuilder().GET().uri(url.toURI()).headers("Cookie", cookie).build();
             HttpResponse<String> send3 = HttpClient.newHttpClient().send(request3, HttpResponse.BodyHandlers.ofString());
+            if (send3.statusCode() == 404) {
+                System.out.println(" not found.");
+                return false;
+            }
             Map<String, List<String>> map3 = send3.headers().map();
             cookie += "; " + map3.get("Set-Cookie").stream().map(h -> h.substring(0, h.indexOf(';'))).collect(Collectors.joining("; "));
 
@@ -94,7 +108,7 @@ public class RapidDownloader {
 
             Path downloadDir = of(DOWNLOAD_FOLDER);
             HttpResponse<Path> response = downloadClient.send(
-                    HttpRequest.newBuilder().timeout(Duration.ofHours(2)).GET().uri(location.toURI())
+                    HttpRequest.newBuilder().timeout(Duration.ofMinutes(40)).GET().uri(location.toURI())
                             .headers("Cookie", cookie).build(),
                     HttpResponse.BodyHandlers.ofFileDownload(downloadDir, StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE));
 
