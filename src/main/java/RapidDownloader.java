@@ -35,13 +35,13 @@ public class RapidDownloader {
     HttpClient downloadClient = HttpClient.newBuilder().connectTimeout(ofSeconds(30)).followRedirects(HttpClient.Redirect.ALWAYS).build();
 
     public static void main(String[] args) throws IOException {
-
-        RapidDownloader rapidDownloader = new RapidDownloader();
-        rapidDownloader.LINKS_FILE = args[0];
-        rapidDownloader.DOWNLOAD_FOLDER = args[1];
-        rapidDownloader.RAPID_USER = args[2];
-        rapidDownloader.RAPID_PASSWORD = args[3];
-        rapidDownloader.run(args);
+        new GrabLinks().grabLinks();
+//        RapidDownloader rapidDownloader = new RapidDownloader();
+//        rapidDownloader.LINKS_FILE = args[0];
+//        rapidDownloader.DOWNLOAD_FOLDER = args[1];
+//        rapidDownloader.RAPID_USER = args[2];
+//        rapidDownloader.RAPID_PASSWORD = args[3];
+//        rapidDownloader.run(args);
     }
 
     private void run(String[] args) throws IOException {
@@ -85,9 +85,9 @@ public class RapidDownloader {
             String name = link[0];
             String file = link[1];
 
-            System.out.print(name + "("+ file +")");
+            System.out.print(name + "(" + file + ")");
 
-            if(Files.exists(Path.of(DOWNLOAD_FOLDER,name))) {
+            if (Files.exists(Path.of(DOWNLOAD_FOLDER, name))) {
                 System.out.println(" exists.");
                 return false;
             }
