@@ -42,6 +42,6 @@ jobs:
       run: mvn -B package --file pom.xml -Drevision=${{ steps.autotag.outputs.new_tag }}
 
     - name: Publish to GitHub Packages Apache Maven
-      run: mvn deploy
+      run: mvn deploy -Drevision=${{ steps.autotag.outputs.new_tag }}
       env:
         GITHUB_TOKEN: ${{ github.token }}
