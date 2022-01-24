@@ -18,6 +18,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static java.nio.file.Path.of;
+import static java.time.Duration.ofHours;
+import static java.time.Duration.ofSeconds;
 import static java.util.Objects.nonNull;
 import static java.util.function.Predicate.isEqual;
 
@@ -30,7 +32,7 @@ public class RapidDownloader {
 
     private int R = 0;
 
-    HttpClient downloadClient = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(15)).followRedirects(HttpClient.Redirect.ALWAYS).build();
+    HttpClient downloadClient = HttpClient.newBuilder().connectTimeout(ofSeconds(30)).followRedirects(HttpClient.Redirect.ALWAYS).build();
 
     public static void main(String[] args) throws IOException {
 
@@ -108,7 +110,7 @@ public class RapidDownloader {
 
             Path downloadDir = of(DOWNLOAD_FOLDER);
             HttpResponse<Path> response = downloadClient.send(
-                    HttpRequest.newBuilder().timeout(Duration.ofMinutes(40)).GET().uri(location.toURI())
+                    HttpRequest.newBuilder().timeout(ofHours(1)).GET().uri(location.toURI())
                             .headers("Cookie", cookie).build(),
                     HttpResponse.BodyHandlers.ofFileDownload(downloadDir, StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE));
 
