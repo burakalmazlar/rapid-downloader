@@ -30,6 +30,8 @@ public class RapidDownloader {
 
     private int R = 0;
 
+    HttpClient downloadClient = HttpClient.newBuilder().connectTimeout(Duration.ofMinutes(1)).followRedirects(HttpClient.Redirect.ALWAYS).build();
+
     public static void main(String[] args) throws IOException {
 
         RapidDownloader rapidDownloader = new RapidDownloader();
@@ -91,7 +93,7 @@ public class RapidDownloader {
             /*System.out.println(location);*/
 
             Path downloadDir = of(DOWNLOAD_FOLDER);
-            HttpResponse<Path> response = HttpClient.newHttpClient().send(
+            HttpResponse<Path> response = downloadClient.send(
                     HttpRequest.newBuilder().timeout(Duration.ofHours(2)).GET().uri(location.toURI())
                             .headers("Cookie", cookie).build(),
                     HttpResponse.BodyHandlers.ofFileDownload(downloadDir, StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE));
