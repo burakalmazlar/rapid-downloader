@@ -12,10 +12,12 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static java.nio.file.Path.of;
+import static java.util.Objects.nonNull;
 import static java.util.function.Predicate.isEqual;
 
 public class RapidDownloader {
@@ -96,10 +98,10 @@ public class RapidDownloader {
             Path downloadedFile = response.body();
             System.out.println(" downloaded to " + downloadedFile.toString());
             return true;
-        } catch (URISyntaxException | InterruptedException | IOException exc) {
-            if (exc.getCause().getClass().equals(FileAlreadyExistsException.class)) {
+        } catch (Exception exc) {
+            Throwable cause = exc.getCause();
+            if (nonNull(cause) && FileAlreadyExistsException.class.equals(cause.getClass())) {
                 System.out.println(" already downloaded.");
-                return false;
             } else {
                 exc.printStackTrace();
             }
