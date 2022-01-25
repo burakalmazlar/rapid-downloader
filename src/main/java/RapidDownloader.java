@@ -1,3 +1,10 @@
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import org.bson.Document;
+import org.bson.types.ObjectId;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
@@ -11,9 +18,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.time.Duration;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -35,7 +40,7 @@ public class RapidDownloader {
     HttpClient downloadClient = HttpClient.newBuilder().connectTimeout(ofSeconds(30)).followRedirects(HttpClient.Redirect.ALWAYS).build();
 
     public static void main(String[] args) throws IOException {
-        new GrabLinks().grabLinks();
+          new GrabLinks().grabLinks();
 //        RapidDownloader rapidDownloader = new RapidDownloader();
 //        rapidDownloader.LINKS_FILE = args[0];
 //        rapidDownloader.DOWNLOAD_FOLDER = args[1];
