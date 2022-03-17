@@ -1,14 +1,5 @@
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import org.bson.Document;
-import org.bson.types.ObjectId;
-
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
@@ -17,9 +8,8 @@ import java.net.http.HttpResponse;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
-import java.time.Duration;
 import java.util.*;
-import java.util.function.Predicate;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static java.nio.file.Path.of;
@@ -39,8 +29,12 @@ public class RapidDownloader {
 
     HttpClient downloadClient = HttpClient.newBuilder().connectTimeout(ofSeconds(30)).followRedirects(HttpClient.Redirect.ALWAYS).build();
 
-    public static void main(String[] args) throws IOException {
-          new GrabLinks().grabLinks();
+    public static void main(String[] args) throws IOException, InterruptedException {
+        while (true) {
+            new LostArkServerStatus().getServerStatus();
+            TimeUnit.SECONDS.sleep(90);
+        }
+//          new GrabLinks().grabLinks();
 //        RapidDownloader rapidDownloader = new RapidDownloader();
 //        rapidDownloader.LINKS_FILE = args[0];
 //        rapidDownloader.DOWNLOAD_FOLDER = args[1];
