@@ -32,7 +32,7 @@ public class RapidDownloader {
     public static void main(String[] args) throws IOException, InterruptedException {
         while (true) {
             new LostArkServerStatus().getServerStatus();
-            TimeUnit.SECONDS.sleep(90);
+            TimeUnit.SECONDS.sleep(120);
         }
 //          new GrabLinks().grabLinks();
 //        RapidDownloader rapidDownloader = new RapidDownloader();

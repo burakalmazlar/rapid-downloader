@@ -16,6 +16,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -42,15 +43,16 @@ public class LostArkServerStatus {
 
             Document page = Jsoup.parse(pageSource);
             Elements servers = page.select(".ags-ServerStatus-content-responses-response-server");
+            String serverName = "Mokoko";
+            String serverStatus = "none";
             for (Element server : servers) {
 
-                String serverStatus = server.child(0).child(0).classNames().stream().filter(css -> css.contains("--")).findAny().map(css -> css.substring(css.indexOf("--") + 2, css.length())).orElse("unknown");
-                String serverName = server.child(1).text();
-                if ("Mokoko".equalsIgnoreCase(serverName)) {
-                    String highligter = "";//("*".repeat(100) + "\n").repeat(5);
-                    System.err.println(highligter + "\n".repeat(3) + serverName + " -> " + serverStatus + "\n".repeat(3) + highligter);
+                if (serverName.equalsIgnoreCase(server.child(1).text())) {
+                    serverStatus = server.child(0).child(0).classNames().stream().filter(css -> css.contains("--")).findAny().map(css -> css.substring(css.indexOf("--") + 2, css.length())).orElse("unknown");
                 }
             }
+            System.out.print(LocalTime.now().toString() + " : " + serverName + " -> ");
+            System.err.println(serverStatus);
 
         } catch (InterruptedException interruptedException) {
             interruptedException.printStackTrace();
